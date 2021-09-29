@@ -1,5 +1,3 @@
-from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
-from pprint import pprint
 import requests
 import telebot
 import time
@@ -25,20 +23,17 @@ def handle_text(message):
         try:
             city = message.text
             r = requests.get(
-                f'http://api.openweathermap.org/data/2.5/weather?q={city}&APPID=2a1fa51ed2d0b30a5e976b62e76638e3')
+                f'http://api.openweathermap.org/data/2.5/weather?q={city}&lang=ru&APPID=2a1fa51ed2d0b30a5e976b62e76638e3')
             weather = r.json()
-            temp = int(int(weather["main"]["temp"])-273.15)
-            printweather = f"Погода в городе {city} в данный момент: {temp} градусов"
+            temp = int(int(weather["main"]["temp"])-272.15)
+            w = weather["weather"]
+            w = w[0].get("description")
+            printweather = f"На данный момент в городе {city} {w}! Градусник показывает: {temp}°с"
             bot.send_message(message.chat.id, printweather)
         except:
             bot.send_message(
                 message.chat.id, "Я не нашел ваш город =( Попробуй еще! /weather")
 
-
-button_hi = KeyboardButton('Привет! 👋')
-
-greet_kb = ReplyKeyboardMarkup()
-greet_kb.add(button_hi)
 
 while True:
     try:
